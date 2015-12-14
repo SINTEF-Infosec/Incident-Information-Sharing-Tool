@@ -1,0 +1,164 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load incidents_get_language %}
+{% load staticfiles %}
+
+{% block title %}Providers{% endblock %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{% block content %}
+	<section class="content-header">
+      <h1>
+        Providers
+        <small>{% if edit %}Edit{% else %}Add new{% endif %}</small>
+      </h1>
+    </section>
+	<section class="content">
+		<form role="form" action="" method="POST">
+			<div class="row">
+				<div class="col-lg-8 col-sm-8">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Provider Details</h3>
+						</div>
+						<div class="box-body">
+							<div class="form-group" id="name">
+								<label for="{{ form.name.id_for_label}}">{{ form.name.label }}</label>
+								{{ form.name|add_class:"form-control" }}
+								{{ form.name.errors }}
+							</div>
+							<div class="form-group" id="description">
+								<label for="{{ form.description.id_for_label}}">{{ form.description.label }}</label>
+								{{ form.description|add_class:"form-control" }}
+								{{ form.description.errors }}
+							</div>
+							<div class="form-group" id="endpoint">
+								<label for="{{ form.endpoint.id_for_label}}">{{ form.endpoint.label }}</label>
+								{{ form.endpoint|field_with_button:"Fetch configuration"|safe }}
+								{{ form.endpoint.errors }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-4">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Remote</h3>
+						</div>
+						<div class="box-body">
+							{% if not edit %}
+							<div class="form-group" id="id">
+								<label for="{{ form.inputId.id_for_label}}">{{ form.inputId.label }}</label>
+								{{ form.inputId|add_class:"form-control" }}
+								{{ form.inputId.errors }}
+							</div>{% endif %}
+							<!-- <div class="form-group">
+								<label for="{{ form.token_end_point.id_for_label}}">{{ form.token_end_point.label }}</label>
+								{{ form.token_end_point|add_class:"form-control" }}
+								{{ form.token_end_point.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.client_id.id_for_label}}">{{ form.client_id.label }}</label>
+								{{ form.client_id|add_class:"form-control" }}
+								{{ form.client_id.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.client_secret.id_for_label}}">{{ form.client_secret.label }}</label>
+								{{ form.client_secret|add_class:"form-control" }}
+								{{ form.client_secret.errors }}
+							</div> -->
+						</div>
+					</div>
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Actions</h3>
+						</div>
+						<div class="box-body">
+							{% csrf_token %}
+  							<button class="btn btn-primary" type="submit">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+	function fetchProviderIdentity(endpoint) {
+		var url = endpoint + '/identity' + '?format=json';
+		var result = null;
+		
+		$.ajax({
+			url: url,
+			type: 'get',
+			dataType: 'json',
+			async: false,
+			success: function(data) {
+				result = data;
+			}
+		});
+		
+		return result;
+	}
+	
+	function isValidUrl(url) {
+	    if (/^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url)) {
+	    	return true;
+	    } else if (url.toLowerCase().indexOf("://localhost") >= 0) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
+	}
+	
+	function writeProviderIdentity(id, name, description) {
+		$('#name input').val(name);
+		
+		$('#description input').val(description);
+		
+		$('#id input').val(id);
+	}
+	
+	function populateProviderIdentity() {
+		var url = $('#endpoint .input-group input').val();
+		var data = "";
+		
+		if(isValidUrl(url)) {
+			$('#endpoint').removeClass('has-error');
+			var data = fetchProviderIdentity(url);
+		} else {
+			$('#endpoint').addClass('has-error');
+		}
+		
+		if(data) {
+			var name = data.name;
+			var description = data.description;
+			var id = data.id;
+			
+			writeProviderIdentity(id, name, description);
+		} else {
+			$('#endpoint').addClass('has-error');
+		}
+	}
+	
+	$('#endpoint .input-group .input-group-addon').click(function() {
+		populateProviderIdentity();
+	});
+	
+	$(document).ready(function() {
+		var name = $('#name input').val();
+		var description = $('#description input').val();
+		var id = $('#id input').val();
+		
+		writeProviderIdentity(id, name, description);
+	});
+</script>
+{% endblock %}

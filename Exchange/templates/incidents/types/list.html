@@ -1,0 +1,54 @@
+{% extends "layouts/base.html" %}
+{% load bootstrap_pagination %}
+
+{% block title %}Incident Types{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{%block content %}
+	<section class="content-header">
+      <h1>
+        Incident Types
+        <small>List</small>
+      </h1>
+    </section>
+    
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-12 col-xs-12">
+				<div class="box">
+					<div class="box-body">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Description</th>
+									<th>Consequence</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for item in items %}
+								<tr>
+									<td><a href="{% url 'incident-type-details' item.id %}">{{ item.name }}</a> <a class="pull-right label btn-danger" href="{% url 'incident-type-delete' item.id %}">Delete</a></td>
+									<td>{{ item.description }}</td>
+									<td>{{ item.consequence }}</td>
+								</tr>
+								{% empty %}
+								<tr>
+									<td colspan="3">You have not added any incident types. In order to create incidents or for partners to subscribe to your incidents, you need to <a href="{% url 'incident-type-create' %}">add at least one</a>.</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="box-footer clearfix">
+						<div class="no-margin pull-right">
+							{% bootstrap_paginate page_obj range=10 show_prev_next="false" show_first_last="true" %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

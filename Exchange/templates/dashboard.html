@@ -1,0 +1,126 @@
+{% extends "layouts/base.html" %}
+{% load staticfiles %}
+
+{% block title %}Incidents{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{%block content %}
+	<section class="content-header">
+      <h1>
+        Dashboard
+      </h1>
+    </section>
+    
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-8 col-xs-8">
+				<div class="box">
+					<div class="box-header with-border">
+						<h3 class="box-title">Incident history</h3>
+						<div class="box-tools pull-right">
+							<button class="btn btn-box-tool" data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+							<div class="btn-group">
+								<button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<i class="fa fa-wrench"></i>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="#">Action</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href="#">Action</a>
+									</li>
+								</ul>
+							</div>
+							<button class="btn btn-box-tool" data-widget="remove">
+								<i class="fa fa-times"></i>
+							</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<img src="{% static 'images/stat.png' %}" style="width:100%;" />
+					</div>
+				</div>
+				
+			</div>
+			<div class="col-lg-4 col-xs-4">
+				<div class="box">
+					<div class="box-header with-border">
+						<h3 class="box-title">Shortcuts</h3>
+						<div class="box-tools pull-right">
+							<button class="btn btn-box-tool" data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+							<div class="btn-group">
+								<button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<i class="fa fa-wrench"></i>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="#">Action</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href="#">Action</a>
+									</li>
+								</ul>
+							</div>
+							<button class="btn btn-box-tool" data-widget="remove">
+								<i class="fa fa-times"></i>
+							</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<ul>
+							<li><a href="{% url 'incident-list' %}">Incidents</a></li>
+							<li><a href="{% url 'incident-create' %}">Create Incident</a></li>
+							<li>...</li>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="box">
+					<div class="box-header with-border">
+						<h3 class="box-title">Incidents in need of attention</h3>
+						<div class="box-tools pull-right">
+							<button class="btn btn-box-tool" data-widget="collapse">
+								<i class="fa fa-minus"></i>
+							</button>
+							<div class="btn-group">
+								<button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									<i class="fa fa-wrench"></i>
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a href="#">Action</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a href="#">Action</a>
+									</li>
+								</ul>
+							</div>
+							<button class="btn btn-box-tool" data-widget="remove">
+								<i class="fa fa-times"></i>
+							</button>
+						</div>
+					</div>
+					<div class="box-body">
+						<ul>
+							<li><a href="">Incident 1</a></li>
+							<li><a href="">Incident 2</a></li>
+							<li><a href="">Incident 3</a></li>
+							<li><a href="">Incident 4</a></li>
+							<li>...</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

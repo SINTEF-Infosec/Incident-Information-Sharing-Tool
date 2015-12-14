@@ -1,0 +1,180 @@
+{% load staticfiles %}
+
+		<header class="main-header">
+        <!-- Logo -->
+        <a href="{% url 'dashboard' %}" class="logo">IMT</a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- Messages: style can be found in dropdown.less-->
+              <li class="dropdown messages-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-envelope-o"></i>
+                  <span class="label label-success">1</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 1 message</li>
+                  <li>
+                    <!-- inner menu: contains the actual data -->
+                    <ul class="menu">
+                      <li><!-- start message -->
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="{% static 'images/avatar.png' %}" class="img-circle" alt="User Image"/>
+                          </div>
+                          <h4>
+                            Incident Policy
+                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                          </h4>
+                          <p>The reviced incident policy is available...</p>
+                        </a>
+                      </li><!-- end message -->
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">See All Messages</a></li>
+                </ul>
+              </li>
+              <!-- Notifications: style can be found in dropdown.less -->
+              <li class="dropdown notifications-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-bell-o"></i>
+                  <span class="label label-warning" id="alertCount">2</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have <span id="alertCount2">2</span> notifications</li>
+                  <li>
+                    <!-- inner menu: contains the actual data -->
+                    <ul class="menu" id="alertList">
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-warning text-yellow"></i> The current configuration of Apache is not adviced. Please review your configurations.
+                        </a>
+                      </li>
+                	  <li>
+                        <a href="#">
+                          <i class="fa fa-user text-red"></i> PID might be compromized
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">View all</a></li>
+                </ul>
+              </li>
+              <!-- User Account: style can be found in dropdown.less -->
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="{% static 'images/avatar.png' %}" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs">Ola Nordmann</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- User image -->
+                  <li class="user-header">
+                    <img src="{% static 'images/avatar.png' %}" class="img-circle" alt="User Image" />
+                    <p>
+                      Ola Nordmann - Incident Handler
+                      <small>Employee since Nov. 2012</small>
+                    </p>
+                  </li>
+                  <!-- Menu Body -->
+                  <li class="user-body">
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Incidents</a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Competence</a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Groups</a>
+                    </div>
+                  </li>
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+                      <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    </div>
+                    <div class="pull-right">
+                      <a href="{% url 'logout' %}" class="btn btn-default btn-flat">Sign out</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      
+      <script type="text/javascript">
+      		function createAlert(id, link, type, message) {
+      			return '<li id="' + id + '"><a href="' + link + '">' + message + '</a></li>'
+      		}
+      		
+      		function fetchAlerts() {
+				var url = '/api/1.0/alerts?format=json';
+				var results = null;
+				
+				$.ajax({
+					url: url,
+					type: 'get',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						results = data.results;
+					}
+				});
+				
+				return results;
+			}
+			
+			function calcUnReadAlerts(alerts) {
+				var i = 0;
+				
+				var length = alerts.length;
+				
+				for(var i = 0; i < length; ++i) {
+					if(alerts[i].read) {
+						++i;
+					}
+				}
+				
+				return i;
+			}
+			
+			function updateUnreadCount(count) {
+				$("#alertCount").empty();
+				$("#alertCount").append(count);
+      			$("#alertCount2").empty();
+      			$("#alertCount2").append(count);
+			}
+			
+			function renderAlerts(alerts) {
+				updateUnreadCount(calcUnReadAlerts(alerts));
+				
+				html = '';
+				
+				var numAlerts = alerts.length;
+				
+				for(var i = 0; i < numAlerts; ++i) {
+					html += createAlert(alerts[i].alert.id, alerts[i].alert.link, alerts[i].alert.type, alerts[i].alert.alert);
+				}
+				
+				$("#alertList").empty();
+				$("#alertList").append(html);
+			}
+			
+			function updateAlerts() {
+				alerts = fetchAlerts();
+				renderAlerts(alerts);
+			}
+			
+			$(document).ready(function(){
+				updateAlerts();
+				setInterval(function () {
+					updateAlerts();
+				}, 10000);
+			});
+      </script>

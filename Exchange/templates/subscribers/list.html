@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %}
+{% load bootstrap_pagination %}
+
+{% block title %}Subscribers{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{%block content %}
+	<section class="content-header">
+      <h1>
+        Subscribers
+        <small>List</small>
+      </h1>
+    </section>
+    
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-12 col-xs-12">
+				<div class="box">
+					<div class="box-body">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for item in items %}
+								<tr>
+									<td><a href="{% url 'subscriber-details' item.id %}">{{ item.name }}</a> <span class="delete" id="{{ item.id }}"><a class="label btn-danger pull-right" href="{% url 'subscriber-delete' item.id %}">Delete</a></span></td>
+								</tr>
+								{% empty %}
+								<tr>
+									<td>You have no subscribers at this time. Maybe you need to add a national authority manually? Do it <a href="{% url 'subscriber-create' %}">here</a></td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					<div class="box-footer clearfix">
+						<div class="no-margin pull-right">
+							{% bootstrap_paginate page_obj range=10 show_prev_next="false" show_first_last="true" %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

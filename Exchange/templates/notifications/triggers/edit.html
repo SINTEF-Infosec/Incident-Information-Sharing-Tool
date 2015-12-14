@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+
+{% block title %}Notification Trigger{% endblock %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{% block content %}
+	<section class="content-header">
+      <h1>
+        Notification Trigger
+        <small>{% if edit %}Edit{% else %}Add new{% endif %}</small>
+      </h1>
+    </section>
+	<section class="content">
+		<form role="form" action="" method="POST">
+			<div class="row">
+				<div class="col-lg-8 col-sm-8">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Notification Trigger Details</h3>
+						</div>
+						<div class="box-body">
+							{{ form.notification_incident }}
+							<div class="form-group">
+								<label for="{{ form.type.id_for_label}}">{{ form.type.label }}</label> <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="The type of Trigger"><i class="fa fa-question-circle"></i></span>
+								{{ form.type|add_class:"form-control" }}
+								{{ form.type.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.method.id_for_label}}">{{ form.method.label }}</label> <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="The Triggers logical relation to the next Trigger in the list"><i class="fa fa-question-circle"></i></span>
+								{{ form.method|add_class:"form-control" }}
+								{{ form.method.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.threshold.id_for_label}}">{{ form.threshold.label }}</label> <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="The value upon which the Trigger is considered fulfilled"><i class="fa fa-question-circle"></i></span>
+								{{ form.threshold|add_class:"form-control" }}
+								{{ form.threshold.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.comparator.id_for_label}}">{{ form.comparator.label }}</label> <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="The comparator used to determine if the Threshold value is fulfilled in relation to the actual value in the system"><i class="fa fa-question-circle"></i></span>
+								{{ form.comparator|add_class:"form-control" }}
+								{{ form.comparator.errors }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-4">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Actions</h3>
+						</div>
+						<div class="box-body">
+							{% csrf_token %}
+  							<button class="btn btn-primary" type="submit">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,391 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load incidents_get_language %}
+{% load staticfiles %}
+
+{% block title %}Incident{% endblock %}
+
+{% block head %}
+		{{ form.media }}
+{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{% block content %}
+	<section class="content-header">
+      <h1>
+        Incidents
+        <small>{% if edit %}Edit{% else %}Add new{% endif %}</small>
+      </h1>
+    </section>
+	<section class="content">
+		<form role="form" action="" method="POST">
+			<div class="row">
+				<div class="col-lg-8 col-sm-8">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Incident Details</h3>
+						</div>
+						<div class="box-body">
+							{{ form.parent }}
+							<div class="form-group">
+								<label for="{{ form.type.id_for_label}}">{{ form.type.label }}</label>
+								{{ form.type|print_form_field:tlp_fields|safe }}
+								{{ form.type.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.status.id_for_label}}">{{ form.status.label }}</label>
+								{% if parent %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.status }}</span>Parent value:<br> {{ parent.status }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								{{ form.status|print_form_field:tlp_fields|safe }}
+								{{ form.status.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.impact.id_for_label}}">{{ form.impact.label }}</label>
+								{% if parent %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.impact }}</span>Parent value:<br> {{ parent.impact }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								{{ form.impact|print_form_field:tlp_fields|safe }}
+								{{ form.impact.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.summary.id_for_label}}">{{ form.summary.label }}</label>
+								{% if parent %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.summary }}</span>Parent value:<br> {{ parent.summary }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								{{ form.summary|print_form_field:tlp_fields|safe }}
+								{{ form.summary.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.description.id_for_label}}">{{ form.description.label }}</label>
+								{% if parent %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.description }}</span>Parent value:<br> {{ parent.description }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								{{ form.description|print_form_field:tlp_fields|safe }}
+								{{ form.description.errors }}
+							</div>
+						</div>
+					</div>
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Additional Information</h3>
+						</div>
+						<div class="box-body">
+							<div id="custom-fields">
+								<p class="alert alert-warning">You need to select an Incident Type before you are allowed to provide additional information</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-4">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Incident Meta</h3>
+						</div>
+						<div class="box-body">
+							<div class="form-group">
+								<label for="{{ form.language.id_for_label}}">{{ form.language.label }}</label>
+								{% if parent %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.language }}</span>Parent value:<br> {{ parent.language }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								{{ form.language|add_class:"form-control" }}
+								{{ form.language.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.occurrence_time.id_for_label}}">{{ form.occurrence_time.label }}</label>
+								{{ form.occurrence_time|add_class:"form-control" }}
+								{{ form.occurrence_time.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.detection_time.id_for_label}}">{{ form.detection_time.label }}</label>
+								{{ form.detection_time|add_class:"form-control" }}
+								{{ form.detection_time.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.liaison.id_for_label}}">{{ form.liaison.label }}</label>
+								{{ form.liaison|print_form_field:tlp_fields|safe }}
+								{{ form.liaison.errors }}
+							</div>
+							{% if object.is_our or not edit %}
+							<div class="form-group">
+								<label for="{{ form.next_update.id_for_label}}">{{ form.next_update.label }}</label>
+								{% if parent %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.next_update.id }}</span>Parent value:<br> {{ parent.next_update }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								{{ form.next_update|print_form_field:tlp_fields|safe }}
+								{{ form.next_update.errors }}
+							</div>
+							{% endif %}
+						</div>
+					</div>
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">TLP</h3>
+						</div>
+						<div class="box-body">
+							<div class="form-group">
+								<label for="tlp_schema">Schema</label>
+								{% if parent.tlp %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.tlp.schema }}</span>Parent value:<br> {{ parent.tlp.schema }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								<select name="tlp_schema" id="tlp_schema" class="form-control">
+									<option value="enisa" {% ifequal 'enisa' tlp_schema%}selected{% endifequal %}>ENISA</option>
+									<option value="us-cert" {% ifequal 'us-cert' tlp_schema%}selected{% endifequal %}>US-CERT</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="tlp_value">Value</label>
+								{% if parent.tlp %}
+								<div class="parent">
+									<span class="hidden value">{{ parent.tlp.value }}</span>Parent value:<br> {{ parent.tlp.value }}<a href="javascript:void(null);" class="use-parent">Use</a> 
+								</div>
+								{% endif %}
+								<select name="tlp_value" id="tlp_value" class="form-control">
+									<option value="red" {% ifequal 'red' tlp_value %}selected{% endifequal %}>Red</option>
+									<option value="amber" {% ifequal 'amber' tlp_value %}selected{% endifequal %}>Amber</option>
+									<option value="green" {% ifequal 'green' tlp_value %}selected{% endifequal %}>Green</option>
+									<option value="white" {% ifequal 'white' tlp_value %}selected{% endifequal %}>White</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Actions</h3>
+						</div>
+						<div class="box-body">
+							{% csrf_token %}
+  							<button class="btn btn-primary" type="submit">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+			$('.tlp-indicator').click(function() {
+				var selector = $(this).parent().children('.tlp-selector');
+				if(selector.hasClass('collapse')) {
+					selector.removeClass('collapse');					
+				} else {
+					selector.addClass('collapse');
+				}
+			});
+			
+			$('.tlp-selector input[type=radio]').click(function() {
+				var radio = $(this);
+				var indicator = radio.parent().parent().parent().children('.tlp-indicator');
+				indicator.removeClass('red amber green white deactive');
+				indicator.addClass(radio.val());
+			});
+			
+			$(function () {
+				$('[data-toggle="popover"]').popover()
+			});
+			
+			$('body').on('click', function (e) {
+			    $('[data-toggle="popover"]').each(function () {
+			        //the 'is' for buttons that trigger popups
+			        //the 'has' for icons within a button that triggers a popup
+			        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+			            $(this).popover('hide');
+			        }
+			    });
+			    
+			    $('.tlp-selector').each(function() {
+			    	if(!$(this).is(e.target) && !$(this).parent().children('.tlp-indicator').is(e.target)) {
+				    	$(this).addClass('collapse');
+			    	}
+			    });
+			});
+			
+			function createField(id, type, name, value, help, style) {
+				return '<input type=\'' + type + '\' value=\'' + value + '\' id="' + id + '" name="' + id + '" class="' + style + '" />';
+			}
+			
+			function fetchCustomFieldValue(fieldTypeId, incidentId) {
+				var url = '/api/1.0/incidents/' + incidentId + '/custom-fields/' + fieldTypeId + '?format=json';
+				var result = null;
+				
+				$.ajax({
+					url: url,
+					type: 'get',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						result = data.value;
+					}
+				});
+				
+				return result;
+			}
+			
+			function fetchCustomFields(incidentTypeId) {
+				var url = '/api/1.0/incidents/types/' + incidentTypeId + '/custom-fields/?format=json';
+				var result = null;
+				
+				$.ajax({
+					url: url,
+					type: 'get',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						result = data;
+					}
+				});
+				
+				return result;
+			}
+			
+			function getCustomFieldIdOfParent(field) {
+				var parentId = '{{ parent.id }}';
+				var fieldName = field.name;
+				
+				var customFields = fetchCustomFields('{{ parent.type.id }}');
+				
+				for(i = 0; i < customFields.length; ++i) {
+					if(customFields[i].name == field.name) {
+						return customFields[i].id;
+					}
+				}
+				
+				return '';
+			}
+			
+			
+			function renderField(field) {
+				var html = '';
+				
+				var id = '{{ incidentId }}';
+				var value = '';
+				if(id != '') {
+					var fieldType = field.id;
+					value = fetchCustomFieldValue(fieldType, id);
+				}
+				
+				var use = '';
+				var parentId = '{{parent.id}}';
+				
+				{% if parent %}
+				var pId = getCustomFieldIdOfParent(field);
+				parentValue = fetchCustomFieldValue(pId, parentId);
+				use = '<div class="parent"><span class="hidden value">' + parentValue + '</span>Parent value:<br>' + parentValue + '<a href="javascript:void(null);" class="use-parent">Use</a></div>'; 
+				{% endif %}
+				
+				switch(field.type) {
+					case 'string':
+						html += '<div class="form-group">';
+						html += '<label for="' + field.id + '">' + field.name + '</label> <span class="small help-text" data-toggle="tooltip" data-placement="top" data-original-title="' + field.description + '"><i class="fa fa-question-circle"></i></span>';
+						html += use
+						html += createField(field.id, 'text', field.name, value, field.description, 'form-control');
+						html += '</div>';
+						break;
+					case 'int':
+						html += '<div class="form-group">';
+						html += '<label for="' + field.id + '">' + field.name + '</label> <span class="small help-text" data-toggle="tooltip" data-placement="top" data-original-title="' + field.description + '"><i class="fa fa-question-circle"></i></span>';
+						html += use
+						html += createField(field.id, 'number', field.name, value, field.description, 'form-control');
+						html += '</div>';
+						break;
+					case 'bool':
+						html += '<div class="checkbox"><label>';
+						html += '<input type="checkbox" id="' + field.id + '" name="' + field.id + '" value=true ';
+						html += use
+						if (value == 'true') {
+							html += 'checked ';
+						}
+						html += '/>';
+						html += field.name + '</label>';
+						html += '<span class="small help-text" data-toggle="tooltip" data-placement="top" data-original-title="' + field.description + '"><i class="fa fa-question-circle"></i></span>';
+						html += '</div>';
+						break;
+				}
+				
+				return html;
+			}
+
+			function renderFields(targetElement, fields) {
+				html = '';
+				
+				var numFields = fields.length;
+				
+				for(var i = 0; i < numFields; ++i) {
+					html += renderField(fields[i]);
+				}
+				
+				if(numFields == 0) {
+					html += '<p class="alert alert-warning">This Incident Type does not allow for any additional information</p>';
+				}
+				
+				$("#custom-fields").empty();
+				$("#custom-fields").append(html);
+			}
+			
+			function fetchCustomFields(incidentTypeId) {
+				var url = '/api/1.0/incidents/types/' + incidentTypeId + '/custom-fields?format=json';
+				var results = null;
+				
+				$.ajax({
+					url: url,
+					type: 'get',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						results = data.results;
+					}
+				});
+				
+				return results;
+			}
+			
+			function createCustomFields(targetElement, incidentTypeId) {
+				var customFields = fetchCustomFields(incidentTypeId);
+				renderFields(targetElement, customFields);
+			}
+			
+			$("#{{ form.type.id_for_label }}").change(function() {
+				createCustomFields("#custom-fields", this.value);
+			});
+			
+			$(document).ready(function(){
+				var val = $("#{{ form.type.id_for_label }}").val();
+				if(val != '') {
+					createCustomFields("#custom-fields", val);
+				}
+			});
+			
+			$('body').tooltip({
+    			selector: '.help-text'
+			});
+			
+			$('body').on('click', '.use-parent', function() {
+				var parentValue = $(this).siblings('.value').text();
+				var formFieldInGroup = $(this).parent().parent().children('.input-group').children('.form-control');
+				var formField = $(this).parent().parent().children('.form-control');
+				
+				formField.val(parentValue);
+				formField.change();
+				formFieldInGroup.val(parentValue);
+				formFieldInGroup.change();
+			});
+		</script>
+{% endblock %}

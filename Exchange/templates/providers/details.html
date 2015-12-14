@@ -1,0 +1,62 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Provider{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{%block content %}
+	<section class="content-header">
+      <h1>
+        Provider
+        <small>Details</small>
+      </h1>
+    </section>
+    
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-8 col-sm-8">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">{{ object.name }}</h3>
+					</div>
+					<div class="box-body">
+						<dl>
+							<dt>Description</dt>
+							<dd>{{ object.description }}</dd>
+						</dl>
+						<dl>
+							<dt>Endpoint</dt>
+							<dd>{{ object.endpoint }}</dd>
+						</dl>
+					</div>
+				</div>
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Subscriptions</h3>
+					</div>
+					<div class="box-body">
+						<ul>
+						{% for item in subscription %}
+							<li><a href="{{ item.file }}">{{ item.file }}</a> ({{ item.format }})</li>
+						{% empty %}
+							<li>You do currently not subscribe to any notifications from <i>{{ object.name }}</i></li>
+						{% endfor %}
+						</ul>
+						<a href="{% url 'provider-subscription-create' object.id %}" class="btn btn-info">Add subscription</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-4">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Actions</h3>
+					</div>
+					<div class="box-body">
+						<a href="{% url 'provider-edit' object.id %}" class="btn btn-primary" type="submit">Update Provider</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

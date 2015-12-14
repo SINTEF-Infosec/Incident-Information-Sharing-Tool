@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+
+{% block title %}Incident Attachment{% endblock %}
+
+{% block head %}
+{{ form.media }}
+{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{% block content %}
+	<section class="content-header">
+      <h1>
+        Incident Attachment
+        <small>{% if edit %}Edit{% else %}Add new{% endif %}</small>
+      </h1>
+    </section>
+	<section class="content">
+		<form enctype="multipart/form-data" role="form" action="" method="POST">
+			<div class="row">
+				<div class="col-lg-8 col-sm-8">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Incident Attachment Details</h3>
+						</div>
+						<div class="box-body">
+							<div class="form-group">
+								<label for="{{ form.format.id_for_label}}">{{ form.format.label }}</label>
+								{{ form.format|add_class:"form-control" }}
+								{{ form.format.errors }}
+							</div>
+							<div class="form-group">
+								<label for="{{ form.file.id_for_label}}">{{ form.file.label }}</label>
+								{{ form.file|add_class:"form-control" }}
+								{{ form.file.errors }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-4">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Actions</h3>
+						</div>
+						<div class="box-body">
+							{% csrf_token %}
+  							<button class="btn btn-primary" type="submit">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

@@ -1,0 +1,92 @@
+.subscription .box-header {
+	background: #ededed;
+}
+
+.input-group .red {
+	background-color: #FF0000;
+}
+
+.input-group .amber {
+	background-color: #FFFF00;
+}
+.input-group .green {
+	background-color: #00FF00;
+}
+.input-group .white {
+	background-color: #fff;
+}
+.input-group .deactive {
+	background-color: #eee;
+}
+.deactive .red {
+	background-color: #ff6666;
+}
+.deactive .amber {
+	background-color: #ffff33;
+}
+.deactive .green {
+	background-color: #66ff66;
+}
+
+.red {
+	background-color: #FF0000;
+	color: #fff;
+}
+
+.amber {
+	background-color: #FFFF00;
+}
+.green {
+	background-color: #00FF00;
+}
+.white {
+	backgroound-color: #fff;
+}
+.resolved {
+	color: #00CC00;
+}
+.unresolved {
+	color: #cc0000;
+}
+.circle {
+	display: block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	border: 1px solid #000;
+}
+.tlp .input-group-addon {
+	padding: 3px 12px;
+}
+.tlp-selector {
+	width: 150px;
+	background: #fefefe;
+	margin-left: -185px;
+	border-radius: 3px;
+	border: 1px solid #ccc;
+	padding: 10px;
+	position: absolute;
+	z-index: 1000;
+}
+.tlp-selector h3 {
+	margin-top: 0px;
+}
+
+.tlp-value {
+	padding: 1px 5px;
+	border-radius: 4px;
+}
+
+.parent {
+	background: #eee;
+	padding: 2px;
+}
+
+.use-parent {
+	margin-left: 10px;
+}
+
+.option {
+	width: 10px;
+	height: 10px;
+}

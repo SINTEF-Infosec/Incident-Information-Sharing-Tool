@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+{% load staticfiles %}
+
+{% block title %}End user notification{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{% block content %}
+	<section class="content-header">
+      <h1>
+        End user notification
+        <small>{% if edit %}Edit{% else %}Add new{% endif %}</small>
+      </h1>
+    </section>
+	<section class="content">
+		<form role="form" action="" method="POST">
+			<div class="row">
+				<div class="col-lg-8 col-sm-8">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Message</h3>
+						</div>
+						<div class="box-body">
+							{{form.errors}}
+							{{ form.incident }}
+							{{ form.users }}
+							{{ form.resources }}
+							<div class="form-group">
+								<label for="{{ form.message.id_for_label}}">{{ form.message.label }}</label>
+								{{ form.message|add_class:"form-control" }}
+								{{ form.message.errors }}
+							</div>		
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-sm-4">
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">Actions</h3>
+						</div>
+						<div class="box-body">
+							{% csrf_token %}
+  							<button class="btn btn-primary" type="submit">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+{% endblock %}

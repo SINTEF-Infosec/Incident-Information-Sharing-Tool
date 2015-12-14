@@ -1,0 +1,70 @@
+{% load staticfiles %}
+{% load activelink %}
+
+		<aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="{% static 'images/avatar.png' %}" class="img-circle" alt="User Image" />
+            </div>
+            <div class="pull-left info">
+              <p>Ola Nordmann</p>
+
+              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+          </div>
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu">
+            <li class="header">MAIN NAVIGATION</li>
+            <li class="{% ifactive 'dashboard' %}active{% endifactive %}">
+              <a href="{% url 'dashboard' %}">
+                <i class="fa fa-dashboard"></i> <span>Dashboard</span></i>
+              </a>
+            </li>
+            <li class="treeview {% ifstartswith  'incident-list' %}active{% endifstartswith  %}">
+              <a href="#">
+                <i class="fa fa-exclamation-triangle"></i>
+                <span>Incidents</span>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{% ifactive 'incident-list' %}active{% endifactive %}"><a href="{% url 'incident-list' %}"><i class="fa fa-list"></i> Browse Incidents</a></li>
+                <li class="{% ifactive 'incident-create' %}active{% endifactive %}"><a href="{% url 'incident-create' %}"><i class="fa fa-plus"></i> Add Incident</a></li>
+                <li class="{% ifactive 'incident-type-list' %}active{% endifactive %}"><a href="{% url 'incident-type-list' %}"><i class="fa fa-list"></i> Browse Incident Types</a></li>
+                <li class="{% ifactive 'incident-type-create' %}active{% endifactive %}"><a href="{% url 'incident-type-create' %}"><i class="fa fa-plus"></i> Add Incident Types</a></li>
+              </ul>
+            </li>
+            <li class="treeview {% ifstartswith  'subscriber-list' %}active{% endifstartswith  %}">
+              <a href="#">
+                <i class="fa fa-users"></i>
+                <span>Subscribers</span>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{% ifactive 'subscriber-list' %}active{% endifactive %}"><a href="{% url 'subscriber-list' %}"><i class="fa fa-list"></i> Browse Subscribers</a></li>
+                <li class="{% ifactive 'subscriber-create' %}active{% endifactive %}"><a href="{% url 'subscriber-create' %}"><i class="fa fa-plus"></i> Add Subscriber</a></li>
+              </ul>
+            </li>
+            <li class="treeview {% ifstartswith  'provider-list' %}active{% endifstartswith  %}">
+              <a href="#">
+                <i class="fa fa-server"></i>
+                <span>Providers</span>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{% ifactive 'provider-list' %}active{% endifactive %}"><a href="{% url 'provider-list' %}"><i class="fa fa-list"></i> Browse Providers</a></li>
+                <li class="{% ifactive 'provider-create' %}active{% endifactive %}"><a href="{% url 'provider-create' %}"><i class="fa fa-plus"></i> Add Provider</a></li>
+              </ul>
+            </li>
+            <li class="treeview {% ifstartswith  'company-profile' %}active{% endifstartswith  %}">
+              <a href="#">
+                <i class="fa fa-cog"></i>
+                <span>Settings</span>
+              </a>
+              <ul class="treeview-menu">
+                <li class="{% ifactive 'company-profile' %}active{% endifactive %}"><a href="{% url 'company-profile' %}"><i class="fa fa-building-o"></i> Provider Profile</a></li>
+              </ul>
+            </li>
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+      </aside>

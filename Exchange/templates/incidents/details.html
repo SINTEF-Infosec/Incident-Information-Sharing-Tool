@@ -1,0 +1,220 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load incidents_get_language %}
+
+{% block title %}Incidents{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{%block content %}
+	<section class="content-header">
+      <h1>
+        Incidents
+        <small>Details</small>
+      </h1>
+    </section>
+    
+    {% with tlp_field_names=tlp_fields|tlp_map_to_list %}
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-8 col-sm-8">
+				<div class="box {% ifequal object.status 'unresolved' %}box-danger{% else %}box-success{% endifequal %}">
+					<div class="box-header">
+						<h3 class="box-title">{{ object.summary }}</h3>{% if "summary" in tlp_field_names %} | TLP: <span class="tlp-value {{ "summary"|tlp_for_field:tlp_fields }}"> {{ "summary"|tlp_for_field:tlp_fields|title }}</span>{% endif %}
+					</div>
+					<div class="box-body">
+						<dl>
+							<dt>Origin</dt>
+							<dd><a href="{% url 'provider-details' object.provider.id %}">{{ object.provider.name }}</a></dd>
+						</dl>
+						<dl>
+							<dt>TLP <span class="small help-text" data-toggle="tooltip" data-placement="right" data-original-title="Indicates with whom you are allowed to share the incident information. If information is classified as red or amber, you should NOT pass this on directly to your users."><i class="fa fa-question-circle"></i></span></dt>
+							<dd>{{ tlp_schema|upper }}: <span class="tlp-value {{ tlp_value }}">{{ tlp_value|title }}</span></dd>
+						</dl>
+						{% if object.parent %}
+						<dl>
+							<dt>Parent {% if "parent" in tlp_field_names %}<span class="tlp-value {{ "parent"|tlp_for_field:tlp_fields }}"> | TLP: {{ "parent"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>{{ object.parent }} {% ifequal object.parent None %}{% else %}<a href="#">Trace</a>{% endifequal %}</dd>
+						</dl>
+						{% endif %}
+						<dl>
+							<dt>Status {% if "status" in tlp_field_names %}<span class="tlp-value {{ "status"|tlp_for_field:tlp_fields }}">TLP: {{ "status"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>
+								{{ object.status|get_status|safe }}
+							</dd>
+						</dl>
+						<dl>
+							<dt>Impact {% if "impact" in tlp_field_names %}<span class="tlp-value {{ "impact"|tlp_for_field:tlp_fields }}">TLP: {{ "impact"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>
+								{{ object.impact|get_impact|safe }}
+							</dd>
+						</dl>
+						<dl>
+							<dt>Type {% if "type" in tlp_field_names %}<span class="tlp-value {{ "type"|tlp_for_field:tlp_fields }}">TLP: {{ "type"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>{{ object.type }}</dd>
+						</dl>
+						<dl>
+							<dt>Language {% if "language" in tlp_field_names %}<span class="tlp-value {{ "language"|tlp_for_field:tlp_fields }}">TLP: {{ "language"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>{{ object.language|get_language }}</dd>
+						</dl>
+						<dl>
+							<dt>Description {% if 'description' in tlp_field_names %}<span class="tlp-value {{ "description"|tlp_for_field:tlp_fields }}">TLP: {{ "description"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>{{ object.description }}</dd>
+						</dl>
+						<dl>
+							<dt>Occurred at {% if "occurrence_time" in tlp_field_names %}<span class="tlp-value {{ "occurrence_time"|tlp_for_field:tlp_fields }}">TLP: {{ "occurrence_time"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>{{ object.occurrence_time }}</dd>
+						</dl>
+						<dl>
+							<dt>Detected at {% if "detection_time" in tlp_field_names %}<span class="tlp-value {{ "detection_time"|tlp_for_field:tlp_fields }}">TLP: {{ "detection_time"|tlp_for_field:tlp_fields|title }}</span>{% endif %}</dt>
+							<dd>{{ object.detection_time }}</dd>
+						</dl>
+						{% if object.next_update %}
+						<dl>
+							<dt>Next update at</dt>
+							<dd>{{ object.next_update }}</dd>
+						</dl>
+						{% endif %}
+					</div>
+				</div>
+				{% if custom_values %}
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Additional Information</h3>
+					</div>
+					<div class="box-body">
+						{% if invalid_resources or invalid_users %}
+						<div class="alert alert-danger" role="alert">
+						  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						  <span class="sr-only">Error:</span>
+						  INVALID FORMATTING ON RESOURCES AND/OR USERS - YOU WILL NOT BE ABLE TO NOTIFY ENDUSERS THROUGH A-PPL-E.<br>UPDATE THE FIELDS TO CONTAIN A VALID JSON ARRAY
+						</div>
+						{% endif %}
+						{% for value in custom_values %}
+						<dl>
+							<dt>{{ value.type.name }} <span class="small help-text" data-toggle="tooltip" data-placement="top" data-original-title="{{ value.type.description }}"><i class="fa fa-question-circle"></i></span></dt>
+							<dd>{{ value.value }}</dd>
+						</dl>
+						{% endfor %}
+					</div>
+				</div>
+				{% endif %}
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Attachments</h3>
+					</div>
+					<div class="box-body">
+						<ul>
+						{% for item in attachments %}
+							<li><a href="{{ item.url }}">{{ item.url }}</a> ({{ item.format }})</li>
+						{% empty %}
+							<li>This incident has no attachemts</li>
+						{% endfor %}
+						</ul>
+						<a href="{% url 'incident-attachment-create' object.id %}" class="btn btn-info">Add attachment</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-4">
+				<div class="info-box">
+					<span class="info-box-icon">
+						<span class="glyphicon" aria-hidden="true""><img style="width: 100%; margin-top:-11px;" src="{% static 'images/avatar.png' %}" class="user-image" alt="User Image"/></span>
+					</span>
+					<div class="info-box-content">
+						<span class="info-box-text">Incident Lead</span>
+						<span class="info-box-number">
+							<a href="#">Ola Nordmann</a>
+						</span>
+					</div>
+				</div>
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Liaison</h3>
+					</div>
+					<div class="box-body">
+						<dl>
+							<dt>Name</dt>
+							<dd>{{ object.liaison.name }}</dd>
+						</dl>
+						<dl>
+							<dt>Email</dt>
+							<dd>{{ object.liaison.email }}</dd>
+						</dl>
+						<dl>
+							<dt>Phone</dt>
+							<dd>{{ object.liaison.phone }}</dd>
+						</dl>
+					</div>
+				</div>
+				{% if object.is_our %}
+					{% if object.is_notified %}
+					<div class="info-box">
+						<span class="info-box-icon" style="background: green;">
+							<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:white;"></span>
+						</span>
+						<div class="info-box-content">
+							<span class="info-box-text">&nbsp;</span>
+							<span class="info-box-number">
+								Subscribers have been notified
+							</span>
+						</div>
+					</div>
+					{% else %}
+					<div class="info-box">
+						<span class="info-box-icon" style="background: red;">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true" style="color:white;"></span>
+						</span>
+						<div class="info-box-content">
+							<span class="info-box-text">Subscribers have not been notified</span>
+							<span class="info-box-number">
+								<a class="btn btn-success" href="{% url 'incident-notify-subscribers' object.id %}" style="margin-top: 15px;">Notify Subscribers</a>
+							</span>
+						</div>
+					</div>
+					{% endif %}
+					
+					<div class="box">
+						<div class="box-header">
+							<h3 class="box-title">End user notifications</h3>
+						</div>
+						<div class="box-body">
+							<table class="table table-bordered table-hover">
+								<tbody>
+							{% for value in end_user_notifications %}
+										<tr>
+											<td>{{ forloop.counter }}</td>
+											<td>{{ value.resources }}</td>
+											<td>{{ value.message }}</td>
+										</tr>
+							{% empty %}
+								<p>No notifications have been sent to end users</p>
+							{% endfor %}
+								</tbody>
+							</table>
+							
+							{% if notification_resources %}
+								<a class="btn btn-success" href="{% url 'incident-notify-endusers' object.id %}?resources={{ notification_resources }}&users={{ notification_users }}" style="margin-top: 15px;">Send notification</a>
+							{% else %}
+								<p>The incident needs to contain information about which resources are affected in order to notify end users. <br />Please add this information to the "resources" field, using the following JSON syntax: ["resource1", "resources2", "resource3"]</p>
+							{% endif %}
+						</div>
+					</div>
+					
+				{% endif %}
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Actions</h3>
+					</div>
+					<div class="box-body">
+						{% if object.is_our %}
+						<a href="{% url 'incident-edit' object.id %}" class="btn btn-primary">Update Incident</a>
+						{% endif %}
+  						<a class="btn btn-primary" href="{% url 'incident-create' %}?parent={{ object.id }}" data-toggle="tooltip" data-placement="top" data-original-title="Create new Incident with this Incident as its parent">Derive Incident</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	{% endwith %}
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Subscription{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{%block content %}
+	<section class="content-header">
+      <h1>
+        Subscription
+        <small>Details</small>
+      </h1>
+    </section>
+    
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-8 col-sm-8">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">{{ object.name }}</h3>
+					</div>
+					<div class="box-body">
+						<dl>
+							<dt>Subscriber</dt>
+							<dd><a href="{% url 'subscriber-details' object.subscriber.id %}">{{ object.subscriber.name }}</a></dd>
+						</dl>
+						<dl>
+							<dt>Endpoint <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="The location where notifications are to be delivered"><i class="fa fa-question-circle"></i></span></dt>
+							<dd>{{ object.endpoint }}</dd>
+						</dl>
+					</div>
+				</div>
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Incident Types</h3>  <span class="small" data-toggle="tooltip" data-placement="top" data-original-title='Incident Types upon which "{{ object.subscriber.name }}" is to be notified, if triggers are exceeded'><i class="fa fa-question-circle"></i></span>
+					</div>
+					<div class="box-body">
+					{% for item in incidents %}
+						<div class="box box-solid subscription">
+			                <div class="box-header with-border">
+			                	<h4 class="box-title">{{ item.name }}</h4>
+			                	<div class="pull-right"><a href="{% url 'subscriber-subscription-incident-edit' object.subscriber.id object.id item.id %}" class="label btn-default">Edit</a> <a href="{% url 'subscriber-subscription-incident-delete' object.subscriber.id object.id item.id %}" class="label btn-danger">Delete</a></div>
+			                </div>
+			                <div class="box-body">
+								<dl>
+									<dt>Name</dt>
+									<dd>{{ item.name }}</dd>
+								</dl>
+								<dl>
+									<dt>Type</dt>
+									<dd>{{ item.type.name }}</dd>
+								</dl>
+								
+								<h4>Triggers  <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="The circumstances under which the subscriber should be notified"><i class="fa fa-question-circle"></i></span></h4>
+								<table class="table table-bordered table-hover">
+									<thead>
+										<tr>
+											<th>Type</th>
+											<th>Method <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="The Triggers logical relation to the next Trigger in the list"><i class="fa fa-question-circle"></i></span></th>
+											<th>Threshold</th>
+											<th>Comparator</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for trigger in item.get_triggers %}
+										<tr>
+											<td>{{ trigger.type }}</td>
+											<td>{{ trigger.method }}</td>
+											<td>{{ trigger.threshold }}</td>
+											<td>{{ trigger.comparator }}</td>
+											<td><a href="{% url 'subscriber-subscription-trigger-edit' object.subscriber.id object.id item.id trigger.id %}" class="btn-default label">Edit</a> <a href="{% url 'subscriber-subscription-trigger-delete' object.subscriber.id object.id item.id trigger.id %}" class="btn-danger label">Delete</a></td>
+										</tr>
+									{% empty %}
+										<tr>
+											<td colspan=5>This notification incident has no triggers</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+								<a href="{% url 'subscriber-subscription-trigger-create' object.subscriber.id object.id item.id %}" class="btn btn-primary">Add Notification Trigger</a>
+			                </div>
+			            </div>
+					{% empty %}
+							<p><i>{{ object.name }}</i> does not subscribe to any notifications</p>
+					{% endfor %}
+						<a href="{% url 'subscriber-subscription-incident-create' object.subscriber.id object.id %}" class="btn btn-info">Add incident type to subscription</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-4">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Actions</h3>
+					</div>
+					<div class="box-body">
+						<a href="{% url 'subscriber-subscription-edit' object.subscriber.id object.id %}" class="btn btn-primary" type="submit">Update Subscription</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

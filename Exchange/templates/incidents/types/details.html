@@ -1,0 +1,107 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Incident Type{% endblock %}
+
+{% block header %}{% include 'header.html' %}{% endblock %}
+{% block sidebar %}{% include 'sidebar.html' %}{% endblock %}
+
+{%block content %}
+	<section class="content-header">
+      <h1>
+        Incident Type
+        <small>Details</small>
+      </h1>
+    </section>
+    
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-8 col-sm-8">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">{{ object.name }}</h3>
+					</div>
+					<div class="box-body">
+						<dl>
+							<dt>Description</dt>
+							<dd>{{ object.description }}</dd>
+						</dl>
+						<dl>
+							<dt>Consequence</dt>
+							<dd>{{ object.consequence }}</dd>
+						</dl>
+					</div>
+				</div>
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Trigger Types</h3> <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="Trigger Types decides on which criteria your subscribers may ask to be notified."><i class="fa fa-question-circle"></i></span>
+					</div>
+					<div class="box-body">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Description</th>
+									<th>Comparators</th>
+								</tr>
+							</thead>
+							<tbody>
+							{% for item in triggers %}
+								<tr>
+									<td><a href="{% url 'trigger-type-edit' object.id item.id %}">{{ item.name }}</a> <span id="{{ item.id }}"><a class="btn-danger label pull-right" href="{% url 'trigger-type-delete' object.id item.id %}">Delete</a></span></td>
+									<td>{{ item.description }}</td>
+									<td>{{ item.comparators }}</td>
+								</tr>
+							{% empty %}
+								<tr>
+									<td colspan=4>There are currently no Trigger Types assosiated with <i>{{ object.name }}</i></td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+						<a href="{% url 'trigger-type-create' object.id %}" class="btn btn-info">Add Trigger Type</a>
+					</div>
+				</div>
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Custom Fields</h3> <span class="small" data-toggle="tooltip" data-placement="top" data-original-title="Custom Fields allows you to specify additional data elements to be exchanged for a certain type of incidents"><i class="fa fa-question-circle"></i></span>
+					</div>
+					<div class="box-body">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Description</th>
+									<th>Type</th>
+								</tr>
+							</thead>
+							<tbody>
+							{% for item in custom_fields %}
+								<tr>
+									<td><a href="{% url 'custom-field-edit' object.id item.id %}">{{ item.name }}</a> <a class="label btn-danger pull-right" href="{% url 'custom-field-delete' object.id item.id %}">Delete</a></td>
+									<td>{{ item.description }}</td>
+									<td>{{ item.type }}</td>
+								</tr>
+							{% empty %}
+								<tr>
+									<td colspan=4>There are currently no Custom Fields assosiated with <i>{{ object.name }}</i></td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+						<a href="{% url 'custom-field-create' object.id %}" class="btn btn-info">Add Custom Field</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-sm-4">
+				<div class="box">
+					<div class="box-header">
+						<h3 class="box-title">Actions</h3>
+					</div>
+					<div class="box-body">
+						<a href="{% url 'incident-type-edit' object.id %}" class="btn btn-primary" type="submit">Update Incident Type</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
