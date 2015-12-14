@@ -1,24 +1,30 @@
 # README #
 
-This is a prototype of a security Incident Information Sharing Tool.
+This is a prototype of a security Incident Information Sharing Tool (IIST).
 
-### Get Started ###
+## Installation
+* Get the code: `git clone git@github.com:SINTEF-Infosec/Incident-Information-Sharing-Tool.git`
+* Install Python 3
+* [Install pip](https://pip.pypa.io/en/latest/installing.html) (if not included with you Python install)
+* Navigate to source folder with your preferred command line
+  client, the following items commands are highlighted in verbatim,
+  prefixed with a short description of what that command achievies.
+* Install dependencies: `pip install -r requirements.txt`
+* Run initiall setup: `python manage.py setup`
+* Configure instance: `python manage.py configure`
+* Create user: `python manage.py createsuperuser` and follow the instructions
+* Start server: `python manage.py runserver`
+* Optional: Start another server: `python manage.py runserver 0.0.0.0:8800`
 
-* Install [Python](www.python.org) 3 (preferrably version 3.4 or higher)
-* Install [pip](https://pypi.python.org/pypi/pip) (included by default in Python 3.4)
-* Navigate to source folder
-* Run "pip install -r requirements.txt"
-* Start the server by running "python manage.py runserver"
-* Access your instance at localhost:8000
-
-If you want to access the admin panel, you need to run the following command, and provide the input asked for.
-"python manage.py createsuperuser"
+## Connect two instances of IIST -- A and B
+* Add instance B as a provider of A by entering its API endpoint
+* The two instances will now self configure to be able to exchange information
 
 ### How do I find my way arond? ###
 
-* "/admin" gives you access to manipulating (almost) anything you (might) want
-* "/manage/dashboard" gives you access to the dayly operations of an incident handler (that's the idea, anyway)
-* "/api/1.0/..." gives you access to the API. Use the endpoints defined in the document
+* `/admin` gives you access to manipulating (almost) anything you (might) want
+* `/manage/dashboard` gives you access to the dayly operations of an incident handler (that's the idea, anyway)
+* `/api/1.0/...` gives you access to the API. Use the endpoints defined in the document
 
 ### Quality of Code ###
 
